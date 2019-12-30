@@ -6,7 +6,7 @@ setup the experiment (meshes, pathlists):
     python setup_experiment.py
 
 
-[TODO: time it] run the experiment (this takes 3-4 days on our setup, with multiprocessing on 10 cpus):
+run the experiment (this takes 2 days and 14 hours on our setup, with multiprocessing on 10 cpus):
 
     python run_experiment.py
 
