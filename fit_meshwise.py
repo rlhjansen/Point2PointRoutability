@@ -93,7 +93,7 @@ def save_shift_slope(meshsizes, param_func, N):
         y_worst = df[worst_solv_str(meshsize)]
 
         fitResArb = least_squares(errorfunc, x0=(20, 0.05), args=(nl, y_arb), method='lm')
-        fitResBest = least_squares(errorfunc, x0=(20, 0.05), args=(nl, y_best), method='lm')
+        fitResBest = least_squares(errorfunc, x0=(30, 0.05), args=(nl, y_best), method='lm')
         fitResMean = least_squares(errorfunc, x0=(20, 0.05), args=(nl, y_mean), method='lm')
         fitResWorst = least_squares(errorfunc, x0=(20, 0.05), args=(nl, y_worst), method='lm')
         fit_error_file_lines.append(",".join([str(meshsize), str(fitResArb.x[0]), str(fitResArb.x[1]), str(np.mean(np.power(fitResArb.fun, 2))), str(fitResBest.x[0]), str(fitResBest.x[1]), str(np.mean(np.power(fitResBest.fun, 2)))]))

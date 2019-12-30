@@ -119,8 +119,8 @@ def meta_fit(mesh_metric, param_func, meta_param_func, _arb=False, _mean=False, 
     plt.ylabel("routability point")
     meta_fit_result_lines.append(",".join(["initial routabilitypoint", str(RoutabilitypointArbitrary.x[0]), str(RoutabilitypointArbitrary.x[1]), str(RoutabilitypointArbitrary.x[2]), str(np.mean(np.power(RoutabilitypointArbitrary.fun, 2)))]))
     meta_fit_result_lines.append(",".join(["routabilitypoint after permutation", str(RoutabilitypointBest.x[0]), str(RoutabilitypointBest.x[1]), str(RoutabilitypointBest.x[2]), str(np.mean(np.power(RoutabilitypointBest.fun, 2)))]))
-    ax.text(4900, 30, eval(format_found_params_inside_parenthesis(*list(RoutabilitypointArbitrary.x))), fontsize=12)
-    ax.text(4900, 57.3, eval(format_found_params_inside_parenthesis(*list(RoutabilitypointBest.x))), fontsize=12)
+    ax.text(4900, 33.8, eval(format_found_params_inside_parenthesis(*list(RoutabilitypointArbitrary.x))), fontsize=12)
+    ax.text(4900, 60.3, eval(format_found_params_inside_parenthesis(*list(RoutabilitypointBest.x))), fontsize=12)
 
     print(*RoutabilitypointArbitrary.x)
     print(*RoutabilitypointBest.x)
@@ -167,8 +167,8 @@ def meta_fit(mesh_metric, param_func, meta_param_func, _arb=False, _mean=False, 
     print(*slope_arbitrary_corrected)
     print(*slope_best_corrected)
 
-    ax.text(3400, .18, eval(format_found_params_inside_parenthesis(*slope_arbitrary_corrected)), fontsize=12)
-    ax.text(3400, .22, eval(format_found_params_inside_parenthesis(*slope_best_corrected)), fontsize=12)
+    ax.text(3400, .165, eval(format_found_params_inside_parenthesis(*slope_arbitrary_corrected)), fontsize=12)
+    ax.text(3400, .27, eval(format_found_params_inside_parenthesis(*slope_best_corrected)), fontsize=12)
     meta_fit_result_lines.append(",".join(["initial slope", str(slope_arbitrary_corrected[0]), str(slope_arbitrary_corrected[1]), str(slope_arbitrary_corrected[2]), str(np.mean(np.power(OptimizeResultSlopeArbitrary.fun, 2)))]))
     meta_fit_result_lines.append(",".join(["slope after permutation", str(slope_best_corrected[0]), str(slope_best_corrected[1]), str(slope_best_corrected[2]), str(np.mean(np.power(OptimizeResultSlopeBest.fun, 2)))]))
     with open(meta_fit_resfile, "w+") as f:
