@@ -1,4 +1,12 @@
 
+# environment setup:
+
+to install dependencies we recommend installing via anaconda:
+
+    conda env create -f routability_environment.yml
+
+    conda activate routability
+
 
 # experiment setup
 setup the experiment (meshes, pathlists):
