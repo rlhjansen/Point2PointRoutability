@@ -14,12 +14,34 @@ from common import read_config
 matplotlib.rcParams['pdf.fonttype'] = 42
 matplotlib.rcParams['ps.fonttype'] = 42
 
+SMALL_SIZE = 8
+MEDIUM_SIZE = 10
+BIGGER_SIZE = 16
+
+plt.rc('font', size=SMALL_SIZE)          # controls default text sizes
+plt.rc('axes', titlesize=SMALL_SIZE)     # fontsize of the axes title
+plt.rc('axes', labelsize=BIGGER_SIZE)    # fontsize of the x and y labels
+plt.rc('xtick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
+plt.rc('ytick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
+plt.rc('legend', fontsize=MEDIUM_SIZE)    # legend fontsize
+plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
+
+BBOX_TO_ANCHOR = (0.5, 0.45, .4, .55)
+
+LEGEND_LOC = 4 #location given the bounding box
+LEGEND_WINDOW_INDEX = 1 #location of legend in the 3x3 grid figure, as follows
+
+# 0 # 1 # 2
+# 3 # 4 # 5
+# 6 # 7 # 8
+
 initial_col = '#1b9e77'
 fit_col = '#1b9e77'
 best_fit = '#d95f02'
 best_col = '#d95f02'
 mean_col = 'b'
 worst_col = 'magenta'
+
 
 def mean(list):
     return sum(list)/len(list)
@@ -146,7 +168,7 @@ def plot_shift_slope(meshsizes, types, param_func, title, scatter=True, fitted=T
     gs = gridspec.GridSpec(3,3)
     gs.update(wspace=0.02, hspace=0.02) # set the spacing between axes.
 
-    legend_loc = 7
+    legend_loc = 0
 
     for j, cs in enumerate(meshsizes):
         ax = plt.subplot(gs[j])
@@ -157,11 +179,11 @@ def plot_shift_slope(meshsizes, types, param_func, title, scatter=True, fitted=T
         else:
             ax.set_xticks([10,20,30,40,50,60,70,80,90])
         if determine_3x3_nl(j):
-            ax.set_xlabel("netlist length")
+            ax.set_xlabel("Number of paths in pathlist")
         if not determine_3x3_y(j):
             ax.set_yticks([])
         if determine_3x3_solv(j):
-            ax.set_ylabel("Ratio of routable netlists")
+            ax.set_ylabel("Routability")
 
         labelwindow = j==legend_loc
 
@@ -169,7 +191,7 @@ def plot_shift_slope(meshsizes, types, param_func, title, scatter=True, fitted=T
             y_arb = df[initial_solv_str(cs)]
             popta = ab_df["initial_a"][j], ab_df["initial_b"][j]
             if scatter:
-                plt.scatter(nl, y_arb, c=mean_col, s=6, label=conditional_label(labelwindow, "initial sequence"))
+                plt.scatter(nl, y_arb, c=mean_col, s=6, label=conditional_label(labelwindow, "original"))
             if fitted:
                 ABNL_plot(nl, popta, fitfunc, c='k')
 
@@ -185,7 +207,7 @@ def plot_shift_slope(meshsizes, types, param_func, title, scatter=True, fitted=T
             y_best = df[best_solv_str(cs)]
             poptb = ab_df["best_a"][j], ab_df["best_b"][j]
             if scatter:
-                plt.scatter(nl, y_best, c=best_col, s=6, label=conditional_label(labelwindow, "after permutation"))
+                plt.scatter(nl, y_best, c=best_col, s=6, label=conditional_label(labelwindow, "permuted"))
             if fitted:
                 ABNL_plot(nl, poptb, fitfunc, c='k')
 
@@ -193,16 +215,22 @@ def plot_shift_slope(meshsizes, types, param_func, title, scatter=True, fitted=T
             y_worst = df[best_solv_str(cs)]
             poptw = ab_df["worst_a"][j], ab_df["worst_b"][j]
             if scatter:
-                plt.scatter(nl, y_worst, c=best_col, s=6, label=conditional_label(labelwindow, "after permutation"))
+                plt.scatter(nl, y_worst, c=best_col, s=6, label=conditional_label(labelwindow, "worst after permutation"))
             if fitted:
                 ABNL_plot(nl, poptw, fitfunc, c='k')
 
 
         if labelwindow and legend:
             # Put a legend to the right of the current axis
-            lgd = plt.legend(bbox_to_anchor=(1, 1.0))
-            plt.legend(loc='upper center',
-             bbox_to_anchor=(0.5, -0.22),fancybox=False, shadow=False, ncol=3)
+
+            lgd = plt.legend(bbox_to_anchor=BBOX_TO_ANCHOR, loc=LEGEND_LOC, fancybox=False, shadow=False, ncol=1, frameon=False)
+
+
+            # original settings
+            # also set legend_loc to 7 above
+            # lgd = plt.legend(bbox_to_anchor=(1, 1.0))
+            # plt.legend(loc='upper center',
+            #  bbox_to_anchor=(0.5, -0.22),fancybox=False, shadow=False, ncol=3)
     plt.suptitle(title)
     if legend:
         # tight bounding box

@@ -14,6 +14,28 @@ from common import read_config
 matplotlib.rcParams['pdf.fonttype'] = 42
 matplotlib.rcParams['ps.fonttype'] = 42
 
+SMALL_SIZE = 8
+MEDIUM_SIZE = 10
+BIGGER_SIZE = 16
+
+plt.rc('font', size=SMALL_SIZE)          # controls default text sizes
+plt.rc('axes', titlesize=SMALL_SIZE)     # fontsize of the axes title
+plt.rc('axes', labelsize=BIGGER_SIZE)    # fontsize of the x and y labels
+plt.rc('xtick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
+plt.rc('ytick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
+plt.rc('legend', fontsize=MEDIUM_SIZE)    # legend fontsize
+plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
+
+# reference page:
+# https://stackoverflow.com/questions/39803385/what-does-a-4-element-tuple-argument-for-bbox-to-anchor-mean-in-matplotlib/39806180#39806180
+
+LOC_ROUTABILITY_POINT = 2
+BBOX_TO_ANCHOR_ROUTABILITY_POINT = (0.05, 0.5, .9, .45)
+
+LOC_ROUTABILITY_SLOPE = 1
+BBOX_TO_ANCHOR_ROUTABILITY_SLOPE = (0.75, 0.5, .2, .45)
+
+
 def named_function(name):
     def naming(func):
         func.name = name
@@ -33,11 +55,16 @@ def getdfcol(df, n):
 
 INTERP_MESH = np.array([i for i in range(400, 10001, 1)])
 
+
+
+
 initial_col = 'b'
 best_col = '#d95f02'
 mean_col = 'g'
 worst_col = 'magenta'
 black = 'k'
+
+
 
 meta_fit_vars = {}
 
@@ -99,13 +126,13 @@ def meta_fit(mesh_metric, param_func, meta_param_func, _arb=False, _mean=False, 
     if _arb:
         errorfunc = lambda vars,x,data : logfunc(x, vars[0], vars[1], vars[2]) - data
         RoutabilitypointArbitrary = least_squares(errorfunc, x0=meta_fit_vars['start'], args=(mesh_area_values, initial_shift), method="lm")
-        ax.scatter(mesh_area_values, initial_shift, c=initial_col, label='initial pathlist')
+        ax.scatter(mesh_area_values, initial_shift, c=initial_col, label='original')
         ax.plot(INTERP_MESH, logfunc(INTERP_MESH, *list(RoutabilitypointArbitrary.x)), c=black, linestyle="--")
 
 
     if _best:
         RoutabilitypointBest = least_squares(errorfunc, x0=meta_fit_vars['start'], args=(mesh_area_values, best_shift), method="lm")
-        ax.scatter(mesh_area_values, best_shift, c=best_col, label='after permutation')
+        ax.scatter(mesh_area_values, best_shift, c=best_col, label='permuted')
         ax.plot(INTERP_MESH, logfunc(INTERP_MESH, *list(RoutabilitypointBest.x)), c=black, linestyle="--")
 
     if _mean:
@@ -129,7 +156,7 @@ def meta_fit(mesh_metric, param_func, meta_param_func, _arb=False, _mean=False, 
     print(*RoutabilitypointBest.x)
 
 
-    plt.legend(loc=2)
+    plt.legend(bbox_to_anchor=BBOX_TO_ANCHOR_ROUTABILITY_POINT, loc=LOC_ROUTABILITY_POINT, fancybox=False, shadow=False, ncol=1, frameon=False)
     plt.show()
 
     fig = plt.figure(dpi=200)
@@ -143,13 +170,13 @@ def meta_fit(mesh_metric, param_func, meta_param_func, _arb=False, _mean=False, 
         errorfunc = lambda vars,x,data : slope_adapted_logfunc(x, vars[0], vars[1], vars[2]) -data
         OptimizeResultSlopeArbitrary = least_squares(errorfunc, x0=meta_fit_vars['start_s'], args=(mesh_area_values, initial_slope), method="lm")
         slope_arbitrary_corrected = correct_slopefunc(mesh_area_values, *list(OptimizeResultSlopeArbitrary.x))
-        ax.scatter(mesh_area_values, initial_slope, c=initial_col, label='initial pathlist')
+        ax.scatter(mesh_area_values, initial_slope, c=initial_col, label='original')
         ax.plot(INTERP_MESH, slope_adapted_logfunc(INTERP_MESH, *slope_arbitrary_corrected), c=black, linestyle="--")
 
     if _best:
         OptimizeResultSlopeBest = least_squares(errorfunc, x0=meta_fit_vars['start_s'], args=(mesh_area_values, best_slope), method="lm")
         slope_best_corrected = correct_slopefunc(mesh_area_values, *list(OptimizeResultSlopeBest.x))
-        ax.scatter(mesh_area_values, best_slope, c=best_col, label='after permutation')
+        ax.scatter(mesh_area_values, best_slope, c=best_col, label='permuted')
         ax.plot(INTERP_MESH, slope_adapted_logfunc(INTERP_MESH, *slope_best_corrected), c=black, linestyle="--")
 
     if _mean:
@@ -176,7 +203,7 @@ def meta_fit(mesh_metric, param_func, meta_param_func, _arb=False, _mean=False, 
     meta_fit_result_lines.append(",".join(["slope after permutation", str(slope_best_corrected[0]), str(slope_best_corrected[1]), str(slope_best_corrected[2]), str(np.mean(np.power(OptimizeResultSlopeBest.fun, 2)))]))
     with open(meta_fit_resfile, "w+") as f:
         f.write("\n".join(meta_fit_result_lines))
-    plt.legend(loc=1)
+    plt.legend(bbox_to_anchor=BBOX_TO_ANCHOR_ROUTABILITY_SLOPE, loc=LOC_ROUTABILITY_SLOPE, fancybox=False, shadow=False, ncol=1, frameon=False)
     plt.show()
 
 
