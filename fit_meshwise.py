@@ -2,6 +2,7 @@ import argparse
 
 import os
 import pandas as pd
+import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 from scipy.optimize import least_squares
@@ -9,6 +10,9 @@ from math import exp
 import numpy as np
 
 from common import read_config
+
+matplotlib.rcParams['pdf.fonttype'] = 42
+matplotlib.rcParams['ps.fonttype'] = 42
 
 initial_col = '#1b9e77'
 fit_col = '#1b9e77'

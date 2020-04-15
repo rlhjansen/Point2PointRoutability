@@ -3,6 +3,7 @@ import argparse
 
 import os
 import pandas as pd
+import matplotlib
 import matplotlib.pyplot as plt
 from scipy.optimize import least_squares
 from math import exp, floor
@@ -10,6 +11,8 @@ import numpy as np
 
 from common import read_config
 
+matplotlib.rcParams['pdf.fonttype'] = 42
+matplotlib.rcParams['ps.fonttype'] = 42
 
 def named_function(name):
     def naming(func):
